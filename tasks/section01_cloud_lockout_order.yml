@@ -37,40 +37,6 @@
       - patch
       - account
 
-# Speelman | added because of this error "Failed to import secedit.ini file from C:\\Users\\vagrant\\AppData\\Local\\Temp\\tmp81F3.tmp
-- name: "1.2.1 | AUDIT | Ensure Account lockout duration is set to 15 or more minutes"
-  block:
-      - name: "1.2.1 | AUDIT | Ensure Account lockout duration is set to 15 or more minutes. | Verify variable set to 15 or more minutes warning."
-        ansible.builtin.debug:
-            msg:
-                - "Warning!! You have a invalid number of minutes set for win19cis_account_lockout_duration please read"
-                - "the notes for the variable and make the necessary change to the variable to be in compliance."
-        when:
-            - win19cis_account_lockout_duration < 15
-
-      - name: "1.2.1 | AUDIT | Ensure Account lockout duration is set to 15 or more minutes. | Set warning count."
-        ansible.builtin.import_tasks: warning_facts.yml
-        vars:
-            warn_control_id: '1.2.1'
-        when:
-            - win19cis_account_lockout_duration < 15
-
-      - name: "1.2.1 | PATCH | Ensure Account lockout duration is set to 15 or more minutes. | Set Variable"
-        community.windows.win_security_policy:
-            section: System Access
-            key: LockoutDuration
-            value: "{{ win19cis_account_lockout_duration }}"
-        when:
-            - win19cis_account_lockout_duration >= 15
-  when:
-      - win19cis_rule_1_2_1
-  tags:
-      - level1-domaincontroller
-      - level1-memberserver
-      - rule_1.2.1
-      - patch
-      - account
-
 - name: "1.2.3 | PATCH | Ensure Reset account lockout counter after is set to 15 or more minutes."
   block:
       - name: "1.2.3 | PATCH | Ensure Reset account lockout counter after is set to 15 or more minutes. | Verify variable set to 15 or more minutes warning."
@@ -104,5 +70,39 @@
       - level1-domaincontroller
       - level1-memberserver
       - rule_1.2.3
+      - patch
+      - account
+
+# Speelman | added because of this error "Failed to import secedit.ini file from C:\\Users\\vagrant\\AppData\\Local\\Temp\\tmp81F3.tmp
+- name: "1.2.1 | AUDIT | Ensure Account lockout duration is set to 15 or more minutes"
+  block:
+      - name: "1.2.1 | AUDIT | Ensure Account lockout duration is set to 15 or more minutes. | Verify variable set to 15 or more minutes warning."
+        ansible.builtin.debug:
+            msg:
+                - "Warning!! You have a invalid number of minutes set for win19cis_account_lockout_duration please read"
+                - "the notes for the variable and make the necessary change to the variable to be in compliance."
+        when:
+            - win19cis_account_lockout_duration < 15
+
+      - name: "1.2.1 | AUDIT | Ensure Account lockout duration is set to 15 or more minutes. | Set warning count."
+        ansible.builtin.import_tasks: warning_facts.yml
+        vars:
+            warn_control_id: '1.2.1'
+        when:
+            - win19cis_account_lockout_duration < 15
+
+      - name: "1.2.1 | PATCH | Ensure Account lockout duration is set to 15 or more minutes. | Set Variable"
+        community.windows.win_security_policy:
+            section: System Access
+            key: LockoutDuration
+            value: "{{ win19cis_account_lockout_duration }}"
+        when:
+            - win19cis_account_lockout_duration >= 15
+  when:
+      - win19cis_rule_1_2_1
+  tags:
+      - level1-domaincontroller
+      - level1-memberserver
+      - rule_1.2.1
       - patch
       - account
